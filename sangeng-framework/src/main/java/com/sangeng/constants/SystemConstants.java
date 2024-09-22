@@ -22,5 +22,10 @@ public class SystemConstants {
      * 文章列表每页显示的数据条数
      */
     public static final int ARTICLE_STATUS_SIZE = 10;
+
+    /**
+     * 正常状态的分类
+     */
+    public static final String CATEGORY_STATUS_NORMAL = "0";
     
 }
