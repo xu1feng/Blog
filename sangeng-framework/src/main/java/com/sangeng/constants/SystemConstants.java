@@ -27,5 +27,10 @@ public class SystemConstants {
      * 正常状态的分类
      */
     public static final String CATEGORY_STATUS_NORMAL = "0";
+
+    /**
+     * 审核通过的友链
+     */
+    public static final String lINK_STATUS_NORMAL = "0";
     
 }
