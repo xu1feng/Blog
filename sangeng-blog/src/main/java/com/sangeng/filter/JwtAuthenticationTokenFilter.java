@@ -32,47 +32,48 @@ import java.util.Objects;
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Autowired
+    //RedisCache是我们在huanf-framework工程写的工具类，用于操作redis
     private RedisCache redisCache;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // 获取请求头中的token
+
+        //获取请求头中的token值
         String token = request.getHeader("token");
-        if (!StringUtils.hasText(token)) {
-            // 说明该接口不需要登录 直接放行
-            filterChain.doFilter(request, response);
+        //判断上面那行有没有拿到token值
+        if(!StringUtils.hasText(token)){
+            //说明该接口不需要登录，直接放行，不拦截
+            filterChain.doFilter(request,response);
             return;
         }
-
-        // 解析获取userId
+        //JwtUtil是我们在huanf-framework工程写的工具类。解析获取的token，把原来的密文解析为原文
         Claims claims = null;
         try {
             claims = JwtUtil.parseJWT(token);
         } catch (Exception e) {
+            //当token过期或token被篡改就会进入下面那行的异常处理
             e.printStackTrace();
-            // token超时 token非法
-            // 响应告诉前端需要重新登录
+            //报异常之后，把异常响应给前端，需要重新登录。ResponseResult、AppHttpCodeEnum、WebUtils是我们在huanf-framework工程写的类
             ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
             WebUtils.renderString(response, JSON.toJSONString(result));
             return;
         }
-        String userId = claims.getSubject();
+        String userid = claims.getSubject();
 
-        // 从redis中获取用户信息
-        LoginUser loginUser = redisCache.getCacheObject("bloglogin" + userId);
-
-        // 如果获取不到
-        if (Objects.isNull(loginUser)) {
-            // 说明登录过期 提示重新登录
+        //在redis中，通过key来获取value，注意key我们是加过前缀的，取的时候也要加上前缀
+        LoginUser loginUser = redisCache.getCacheObject("bloglogin:" + userid);
+        //如果在redis获取不到值，说明登录是过期了，需要重新登录
+        if(Objects.isNull(loginUser)){
             ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
             WebUtils.renderString(response, JSON.toJSONString(result));
             return;
         }
 
-        // 存入SecurityContextHolder
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, null);
+        //把从redis获取到的value，存入到SecurityContextHolder(Security官方提供的类)
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser,null,null);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request,response);
+
     }
 }
