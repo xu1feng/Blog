@@ -1,11 +1,11 @@
 package com.sangeng.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description:
@@ -37,4 +37,6 @@ public class CommentVo {
     private Date createTime;
 
     private String username;
+
+    private List<CommentVo> children;
 }
