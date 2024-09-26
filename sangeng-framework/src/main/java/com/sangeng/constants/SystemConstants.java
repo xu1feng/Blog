@@ -32,5 +32,14 @@ public class SystemConstants {
      * 审核通过的友链
      */
     public static final String lINK_STATUS_NORMAL = "0";
-    
+
+    /**
+     * 文章评论
+     */
+    public static final String ARTICLE_COMMENT = "0";
+
+    /**
+     * 友链评论
+     */
+    public static final String LINK_COMMENT = "1";
 }
