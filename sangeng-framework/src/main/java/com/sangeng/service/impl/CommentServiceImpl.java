@@ -3,7 +3,7 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sangeng.constants.SystemConstants;
+import com.sangeng.constants.SystemCanstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Comment;
 import com.sangeng.domain.vo.CommentVo;
@@ -39,7 +39,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper();
 
         // 对articleId进行判断
-        queryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType), Comment::getArticleId, articleId);
+        queryWrapper.eq(SystemCanstants.ARTICLE_COMMENT.equals(commentType), Comment::getArticleId, articleId);
 
         // 根评论rootId为-1
         queryWrapper.eq(Comment::getRootId, -1);

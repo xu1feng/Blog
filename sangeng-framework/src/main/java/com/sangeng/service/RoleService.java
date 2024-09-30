@@ -12,5 +12,6 @@ import java.util.List;
  * @since 2024-09-30 11:31:59
  */
 public interface RoleService extends IService<Role> {
+    //查询用户的角色信息
     List<String> selectRoleKeyByUserId(Long id);
 }

@@ -3,9 +3,10 @@ package com.sangeng.service.impl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.LoginUser;
 import com.sangeng.domain.entity.User;
-import com.sangeng.service.LoginService;
+import com.sangeng.service.SystemLoginService;
 import com.sangeng.utils.JwtUtil;
 import com.sangeng.utils.RedisCache;
+import com.sangeng.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +24,9 @@ import java.util.Objects;
  **/
 
 @Service
-public class SystemLoginServiceImpl implements LoginService {
+//认证，判断用户登录是否成功
+public class SystemLoginServiceImpl implements SystemLoginService {
+
     @Autowired
     //AuthenticationManager是security官方提供的接口
     private AuthenticationManager authenticationManager;
@@ -57,5 +60,17 @@ public class SystemLoginServiceImpl implements LoginService {
         Map<String,String> map = new HashMap<>();
         map.put("token",jwt);
         return ResponseResult.okResult(map);
+    }
+
+//-------------------------------------退出登录---------------------------------------------
+
+    @Override
+    public ResponseResult logout() {
+        //获取当前登录的用户id。SecurityUtils是我们在huanf-framework工程写的类
+        Long userId = SecurityUtils.getUserId();
+
+        //删除redis中对应的值
+        redisCache.deleteObject("login:" + userId);
+        return ResponseResult.okResult();
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  **/
 
 @Configuration
+//WebSecurityConfigurerAdapter是Security官方提供的类
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -58,17 +59,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/user/login").anonymous()
 
+                /* 由于刚开始博客后台模块，还没有登录、权限认证的功能，所以在复制过来后，要把下面的那部分注释掉
+
+
+
                 //为方便测试认证过滤器，我们把查询友链的接口设置为需要登录才能访问。然后我们去访问的时候就能测试登录认证功能了
-                //.antMatchers("/link/getAllLink").authenticated()
+//                .antMatchers("/link/getAllLink").authenticated()
+
+                //为方便测试查询个人信息，我们把查询个人信息的接口设置为需要登录才能访问
+                .antMatchers("/user/userInfo").authenticated()
 
                 //退出登录的配置。如果'没登录'就调用'退出登录'，就会报错，报的错设置为'401 需要登录后操作'，也就是authenticated
-//                .antMatchers("/logout").authenticated()
-//                .antMatchers("/user/userInfo").authenticated()
+                .antMatchers("/logout").authenticated()
+
+                //把文件上传的接口设置为需要登录才能访问
 //                .antMatchers("/upload").authenticated()
-                // 除上面外的所有请求全部不需要认证即可访问
+
+                //需要登录才能在评论区发送评论
+                .antMatchers("/comment").authenticated()
+
+                */
+
+                // 除上面外的所有请求全部都需要认证才可访问
                 .anyRequest().authenticated();
 
         //把我们写的自定义异常处理器配置给Security
@@ -85,5 +101,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //允许跨域
         http.cors();
     }
-
 }

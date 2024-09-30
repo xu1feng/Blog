@@ -12,7 +12,8 @@ import java.util.List;
  * @since 2024-09-30 11:25:58
  */
 public interface MenuService extends IService<Menu> {
+    //查询用户的权限信息
     List<String> selectPermsByUserId(Long id);
-
+    //查询用户的路由信息，也就是查询权限菜单
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
 }

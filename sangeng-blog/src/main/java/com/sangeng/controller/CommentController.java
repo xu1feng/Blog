@@ -1,6 +1,6 @@
 package com.sangeng.controller;
 
-import com.sangeng.constants.SystemConstants;
+import com.sangeng.constants.SystemCanstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.AddCommentDto;
 import com.sangeng.domain.entity.Comment;
@@ -29,7 +29,7 @@ public class CommentController {
 
     @GetMapping("/commentList")
     public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
-        return commentService.commentList(SystemConstants.ARTICLE_COMMENT, articleId, pageNum, pageSize);
+        return commentService.commentList(SystemCanstants.ARTICLE_COMMENT, articleId, pageNum, pageSize);
     }
 
     @PostMapping
@@ -47,6 +47,6 @@ public class CommentController {
             }
     )
     public ResponseResult linkCommentList(Integer pageNum, Integer pageSize) {
-        return commentService.commentList(SystemConstants.LINK_COMMENT, null, pageNum, pageSize);
+        return commentService.commentList(SystemCanstants.LINK_COMMENT, null, pageNum, pageSize);
     }
 }

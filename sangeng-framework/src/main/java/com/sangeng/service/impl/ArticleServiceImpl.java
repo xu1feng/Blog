@@ -3,7 +3,7 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sangeng.constants.SystemConstants;
+import com.sangeng.constants.SystemCanstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.Category;
@@ -44,13 +44,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 查询热门文章 封装成ResponseResult返回
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         // 必须是正式文章
-        queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        queryWrapper.eq(Article::getStatus, SystemCanstants.ARTICLE_STATUS_NORMAL);
 
         // 按照浏览量进行排序
         queryWrapper.orderByDesc(Article::getViewCount);
 
         // 最多只查询10条
-        Page<Article> page = new Page<>(SystemConstants.ARTICLE_STATUS_CURRENT, SystemConstants.ARTICLE_STATUS_SIZE);
+        Page<Article> page = new Page<>(SystemCanstants.ARTICLE_STATUS_CURRENT, SystemCanstants.ARTICLE_STATUS_SIZE);
         page(page, queryWrapper);
 
         List<Article> articles = page.getRecords();
@@ -77,7 +77,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.eq(Objects.nonNull(categoryId)&&categoryId > 0, Article::getCategoryId, categoryId);
 
         // 状态是正式发布的
-        lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        lambdaQueryWrapper.eq(Article::getStatus, SystemCanstants.ARTICLE_STATUS_NORMAL);
 
         // 对isTop进行降序
         lambdaQueryWrapper.orderByDesc(Article::getIsTop);

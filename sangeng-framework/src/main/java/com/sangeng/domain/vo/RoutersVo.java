@@ -17,6 +17,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoutersVo {
-
     private List<Menu> menus;
 }

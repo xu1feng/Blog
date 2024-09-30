@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2024-09-30 11:31:57
  */
 public interface RoleMapper extends BaseMapper<Role> {
-
-    List<String> selectRoleKeyByUserId(Long userId);
+    //查询普通用户的角色权限
+    List<String> selectRoleKeyByOtherUserId(Long userId);
 }
 

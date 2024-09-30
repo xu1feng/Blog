@@ -9,10 +9,11 @@ import com.sangeng.domain.vo.RoutersVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
-import com.sangeng.service.LoginService;
 import com.sangeng.service.MenuService;
 import com.sangeng.service.RoleService;
+import com.sangeng.service.SystemLoginService;
 import com.sangeng.utils.BeanCopyUtils;
+import com.sangeng.utils.RedisCache;
 import com.sangeng.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -33,7 +34,7 @@ import java.util.List;
 public class LoginController {
 
     @Autowired
-    private LoginService loginService;
+    private SystemLoginService systemLoginService;
 
     @Autowired
     private MenuService menuService;
@@ -42,39 +43,58 @@ public class LoginController {
     private RoleService roleService;
 
     @PostMapping("/user/login")
-    public ResponseResult login(@RequestBody User user) {
-        if (!StringUtils.hasText(user.getUserName())) {
-            // 提示 必须要使用用户名
-            throw new SystemException((AppHttpCodeEnum.REQUIRE_USERNAME));
+    public ResponseResult login(@RequestBody User user){
+        if(!StringUtils.hasText(user.getUserName())){
+            //提示 必须要传用户名
+            throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
         }
-        return loginService.login(user);
+        return systemLoginService.login(user);
     }
 
+    //---------------------------查询(超级管理员|非超级管理员)的权限和角色信息-----------------------------
+
     @GetMapping("/getInfo")
-    public ResponseResult<AdminUserInfoVo> getInfo() {
-        // 获取当前登录的用户
+    //AdminUserInfoVo是我们在huanf-framework工程写的类
+    public ResponseResult<AdminUserInfoVo> getInfo(){
+        //获取当前登录的用户。SecurityUtils是我们在huanf-framework写的类
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        // 根据用户id查询权限信息
+        //根据用户id查询权限信息
         List<String> perms = menuService.selectPermsByUserId(loginUser.getUser().getId());
-        // 根据用户id查询角色信息
+        //根据用户id查询角色信息
         List<String> roleKeyList = roleService.selectRoleKeyByUserId(loginUser.getUser().getId());
 
-        // 获取用户信息
+        //获取用户信息
         User user = loginUser.getUser();
+        //BeanCopyUtils是我们在huanf-framework写的类
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(user, UserInfoVo.class);
 
-        // 封装数据返回
-
-        AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms, roleKeyList, userInfoVo);
+        //封装响应返回
+        AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms,roleKeyList,userInfoVo);
         return ResponseResult.okResult(adminUserInfoVo);
     }
 
+    //-------------------------------------查询路由信息(权限菜单)--------------------------------------
+
     @GetMapping("/getRouters")
-    public ResponseResult<RoutersVo> getRouters() {
+    //RoutersVo是我们在huanf-framework工程写的类
+    public ResponseResult<RoutersVo> getRouters(){
+        //获取用户id
         Long userId = SecurityUtils.getUserId();
-        // 查询menu 结果是tree的形式
+
+        //根据用户id来查询menu(权限菜单)。要求查询结果是tree的形式，也就是子父菜单树
         List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
-        // 封装数据返回
+        //封装响应返回
         return ResponseResult.okResult(new RoutersVo(menus));
+    }
+
+    //-----------------------------退出登录的接口(我们写在service比较好---------------------------------
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @PostMapping("/user/logout")
+    public ResponseResult logout(){
+        //退出登录
+        return systemLoginService.logout();
     }
 }
