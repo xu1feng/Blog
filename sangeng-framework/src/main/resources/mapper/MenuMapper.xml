@@ -12,4 +12,45 @@
           AND m.status = 0
           AND m.del_flag = 0
     </select>
+    <select id="selectAllRouterMenu" resultType="com.sangeng.domain.entity.Menu">
+        SELECT DISTINCT m.id,
+                        m.parent_id,
+                        m.menu_name,
+                        m.path,
+                        m.component,
+                        m.visible,
+                        m.status,
+                        IFNULL(m.perms, '') AS perms,
+                        m.is_frame,
+                        m.menu_type,
+                        m.icon,
+                        m.order_num,
+                        m.create_time
+        FROM sys_menu as m
+        WHERE m.menu_type IN ('C', 'M')
+          AND m.status = 0
+          AND m.del_flag = 0
+    </select>
+    <select id="selectRouterMenuTreeByUserId" resultType="com.sangeng.domain.entity.Menu">
+        SELECT DISTINCT m.id,
+                        m.parent_id,
+                        m.menu_name,
+                        m.path,
+                        m.component,
+                        m.visible,
+                        m.status,
+                        IFNULL(m.perms, '') AS perms,
+                        m.is_frame,
+                        m.menu_type,
+                        m.icon,
+                        m.order_num,
+                        m.create_time
+        FROM sys_user_role as ur
+                 LEFT JOIN sys_role_menu as rm ON ur.role_id = rm.role_id
+                 LEFT JOIN sys_menu as m on m.id = rm.menu_id
+        WHERE ur.user_id = #{userId}
+          AND m.menu_type IN ('C', 'M')
+          AND m.status = 0
+          AND m.del_flag = 0
+    </select>
 </mapper>
