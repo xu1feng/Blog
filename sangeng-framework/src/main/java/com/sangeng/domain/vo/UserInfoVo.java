@@ -3,6 +3,7 @@ package com.sangeng.domain.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * @Description:
@@ -11,8 +12,9 @@ import lombok.NoArgsConstructor;
  **/
 
 @Data
-@AllArgsConstructor
+@Accessors(chain = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserInfoVo {
     /**
      * 主键
