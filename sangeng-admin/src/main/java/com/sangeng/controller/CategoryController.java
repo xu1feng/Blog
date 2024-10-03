@@ -13,6 +13,7 @@ import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -79,6 +80,7 @@ public class CategoryController {
         return ResponseResult.okResult();
     }
 
+    @PreAuthorize("@ps.hasPermission('content:category:export')")
     @GetMapping("/export")
     public void export(HttpServletResponse response) {
         // 设置下载文件的请求头
