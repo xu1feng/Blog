@@ -7,10 +7,15 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.TagVo;
 import com.sangeng.mapper.TagMapper;
 import com.sangeng.service.TagService;
+import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 标签(Tag)表服务实现类
@@ -34,5 +39,14 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         // 封装数据返回
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public List<TagVo> listAllTag() {
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Tag::getId, Tag::getName);
+        List<Tag> tags = this.list(queryWrapper);
+        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(tags, TagVo.class);
+        return tagVos;
     }
 }

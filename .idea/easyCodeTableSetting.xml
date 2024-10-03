@@ -143,11 +143,11 @@
                 </list>
               </option>
               <option name="name" value="SgArticleTag" />
-              <option name="preName" value="" />
-              <option name="saveModelName" value="" />
+              <option name="preName" value="sg_" />
+              <option name="saveModelName" value="sangeng-framework" />
               <option name="savePackageName" value="" />
-              <option name="savePath" value="" />
-              <option name="templateGroupName" value="" />
+              <option name="savePath" value="./sangeng-framework/src/main/java" />
+              <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>
         </entry>

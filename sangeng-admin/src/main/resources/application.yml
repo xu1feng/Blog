@@ -25,3 +25,7 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+oss:
+  accessKey: I7dly5uPs8LqgYVfM8MBT8SdYzHKCRtc_sTLFcS4
+  secretKey: 1YUG9jzLsHWTQlEIzbgaFzKGTGo67LATlGLGjuch
+  bucket: xuyifeng-note

@@ -6,10 +6,13 @@ import com.sangeng.domain.dto.EditTagDto;
 import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.TagVo;
 import com.sangeng.service.TagService;
 import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -53,5 +56,11 @@ public class TagController {
         Tag tag = BeanCopyUtils.copyBean(editTagDto, Tag.class);
         tagService.updateById(tag);
         return ResponseResult.okResult();
+    }
+
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag() {
+        List<TagVo> tagVos = tagService.listAllTag();
+        return ResponseResult.okResult(tagVos);
     }
 }
