@@ -1,14 +1,14 @@
 package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.dto.CategoryDto;
 import com.sangeng.domain.entity.Category;
 import com.sangeng.domain.vo.CategoryVo;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.service.CategoryService;
+import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +39,14 @@ public class CategoryController {
     public ResponseResult list(Category category, Integer pageNum, Integer pageSize) {
         PageVo pageVo = categoryService.selectCategoryPage(category, pageNum, pageSize);
         return ResponseResult.okResult(pageVo);
+    }
+
+    //--------------------------增加文章的分类--------------------------
+
+    @PostMapping
+    public ResponseResult add(@RequestBody CategoryDto categoryDto) {
+        Category category = BeanCopyUtils.copyBean(categoryDto, Category.class);
+        categoryService.save(category);
+        return ResponseResult.okResult();
     }
 }
